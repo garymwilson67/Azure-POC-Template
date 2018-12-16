@@ -103,4 +103,4 @@ echo -e "${NC}Subscription ID : ${GREEN}$SubscriptionId"
 echo -e "${NC}-------------------------------------------------------------------------\n\n"
 
                                                                                      
-echo "Done\n"
+echo -e "Done \n"
