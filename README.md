@@ -38,19 +38,19 @@ Follow the instructions below to grant CloudShell access to your Azure cloud acc
 
 1. Login to Azure Portal with your Administrator permissions.
 
-2. Open Azure's **Cloud Shell** by clicking on the header button on the top right corner
-![Azure Portal Cloud Shell Launch Icon](https://docs.microsoft.com/en-us/azure/cloud-shell/media/overview/portal-launch-icon.png)  
+2. Open Azure's **Cloud Shell** by clicking on the header button on the top right corner <br/>
+![Azure Portal Cloud Shell Launch Icon](https://docs.microsoft.com/en-us/azure/cloud-shell/media/overview/portal-launch-icon.png) <br/>
 If it's your first time using this feature, follow Azure's instructions to create a storage account.
 
 3. Make sure that the shell is opened in Bash mode.
 
-4. Copy the following shell commands, and paste into Azure's shell and press Enter.
+4. Copy the following shell commands, and paste into Azure's shell and press Enter.  
+*This script will add an Azure AD application, delegate Azure API permissions to the application and configure the web application as Contributor.*
 ```
 curl https://raw.githubusercontent.com/qualisystems/Azure-POC-Template/api_setup_script/api_setup.sh > cloudshell.sh && 
 chmod +x cloudshell.sh && 
 ./cloudshell.sh
 ```
-This script will add an Azure AD application, delegate Azure API permissions to the application and configure the web application as Contributor. 	
 
 5. The script should start running, this may take a couple of minutes, please wait until it completes.
 
