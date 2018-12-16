@@ -21,7 +21,7 @@ As seen in the above diagram this template will create the following elements in
 3. CloudShell Management Storage
 4. CloudShell Management Resource Group
 4. CloudShell Management Security Group
-5. Windows VM (default DS4_v2)for the following products (installed separately): CloudShell Portal, Quali server (including Execution Server and CloudShell DB)
+5. Windows VM (default DS4_v2) for the following products (installed separately): CloudShell Portal, Quali server (including Execution Server and CloudShell DB)
 6. Linux VM (default DS2_v2) for the following product: QualiX
 5. CloudShell Sandboxes VNET
 6. Peering between the CloudShell Sandboxes VNET and the CloudShell Management VNET
@@ -32,17 +32,30 @@ Note that additional VMs may be dynamically allocated for each sandbox.
 
 CloudShell Apps communicate with Azure using the Azure API. However, to enable the two platforms to work with each other, you need to add a web application that has permissions to use the Azure API.
 
-This configuration is a three-step process:
+During the Azure configuration process you'll obtain an **application ID** and a **secret** key which, along with your subscription ID and tenant ID you'll need to configure CloudShelll. Please pay attention in the steps below to the instructions regarding these important values. 
 
-1. Add an Azure web application
-2. Delegate Azure API permissions to the web application
-3. Configure the web application as Contributor
+Follow the instructions below to grant CloudShell access to your Azure cloud account.
 
-During the Azure configuration process you'll obtain a **tenant** and a **secret** key which, along with your subscription ID and client ID you'll need to configure CloudShelll. Please pay attention in the steps below to the instructions regarding these important values. 
+1. Login to Azure Portal with your Administrator permissions.
 
-Please follow the link below for detailed configuration instructions:
+2. Open Azure's **Cloud Shell** by clicking on the header button on the top right corner <br/>
+![Azure Portal Cloud Shell Launch Icon](https://docs.microsoft.com/en-us/azure/cloud-shell/media/overview/portal-launch-icon.png) <br/>
+If it's your first time using this feature, follow Azure's instructions to create a storage account.
 
-<a href="http://help.quali.com/Online%20Help/8.0.0.7489/DRB/Content/Admn/Azure-Cnfg-API.htm" target="_blank">Configure Azure API to work with CloudShell (CloudShell 8.0 EA Online Help)</a>
+3. Make sure that the shell is opened in Bash mode.
+
+4. Copy the following shell commands, and paste into Azure's shell and press Enter.  
+*This script will add an Azure AD application, delegate Azure API permissions to the application and configure the web application as Contributor.*
+```
+curl https://raw.githubusercontent.com/qualisystems/Azure-POC-Template/api_setup_script/api_setup.sh > cloudshell.sh && 
+chmod +x cloudshell.sh && 
+./cloudshell.sh
+```
+
+5. The script should start running, this may take a couple of minutes, please wait until it completes.
+
+6. Copy and store the **Applicate ID**, **Application Secret**, **Tenant ID** and **Subscription ID** somewhere you'll remember and continue to the next step.
+
 
 ### CloudShell Installation
 
