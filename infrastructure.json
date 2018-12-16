@@ -1,0 +1,160 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "ManagementVnetCIDR": {
+      "defaultValue": "192.168.120.0/24",
+      "type": "string",
+      "metadata": {
+        "description": "The IP range (in CIDR notation) to be used for the Management VNet. Specify a class C CIDR (/24). Example: 192.168.120.0/24"
+      }
+    },
+    "ManagementVnetSubnetCIDR": {
+      "defaultValue": "192.168.120.16/28",
+      "type": "string",
+      "metadata": {
+        "description": "The IP range (in CIDR notation) of the subnet to be used by the Management VNet. This range must be included in the Management VNet�s range. This subnet is used by CloudShell components such as QualiX Server and TestShell Execution Server. Example: 192.168.120.16/28"
+      }
+    },
+    "MGMTVNetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name to use for the mamagement VNET"
+      }
+    },
+    "SandboxVNetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name to use for the sandbox VNET"
+      }
+    },
+    "StorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name to use for the storage account"
+      }
+    }
+  },
+  "variables": {
+    "vNet1": {
+      "peeringName": "vNet_mgmt-to-vNet_sndbx"
+    },
+    "vNet2": {
+      "peeringName": "vNet_sndbx-to-vNet_mgmt"
+    },
+    "location": "[resourceGroup().location]",
+    "storageAccountType": "Premium_LRS"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('SandboxVNetName')]",
+      "apiVersion": "2016-06-01",
+      "location": "[variables('location')]",
+      "tags": {
+        "network_type": "sandbox"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [ "10.159.0.0/16" ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.159.0.0/24"
+            }
+          }
+        ]
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-06-01",
+          "type": "virtualNetworkPeerings",
+          "name": "[variables('vNet2').peeringName]",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('SandboxVNetName'))]",
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('MGMTVNetName'))]"
+          ],
+          "comments": "This is the peering from vNet Sandbox to vNet Management",
+          "properties": {
+            "allowVirtualNetworkAccess": "true",
+            "allowForwardedTraffic": "false",
+            "allowGatewayTransit": "false",
+            "useRemoteGateways": "false",
+            "remoteVirtualNetwork": {
+              "id": "[resourceId('Microsoft.Network/virtualNetworks',parameters('MGMTVNetName'))]"
+            }
+          }
+        }
+
+      ],
+      "dependsOn": []
+    },
+
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('MGMTVNetName')]",
+      "apiVersion": "2016-06-01",
+      "location": "[variables('location')]",
+      "tags": {
+        "network_type": "mgmt"
+      },
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [ "[parameters('ManagementVnetCIDR')]" ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "[parameters('ManagementVnetSubnetCIDR')]"
+            }
+          }
+        ]
+      },
+      "resources": [
+        {
+          "apiVersion": "2016-06-01",
+          "type": "virtualNetworkPeerings",
+          "name": "[variables('vNet1').peeringName]",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('MGMTVNetName'))]",
+            "[concat('Microsoft.Network/virtualNetworks/', parameters('SandboxVNetName'))]"
+          ],
+          "comments": "This is the peering from vNet Management to vNet Sandbox",
+          "properties": {
+            "allowVirtualNetworkAccess": "true",
+            "allowForwardedTraffic": "false",
+            "allowGatewayTransit": "false",
+            "useRemoteGateways": "false",
+            "remoteVirtualNetwork": {
+              "id": "[resourceId('Microsoft.Network/virtualNetworks',parameters('SandboxVNetName'))]"
+            }
+          }
+        }
+      ],
+      "dependsOn": []
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[parameters('StorageAccountName')]",
+      "apiVersion": "2016-01-01",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "[variables('storageAccountType')]"
+      },
+      "kind": "Storage",
+      "properties": {}
+    }
+
+  ],
+  "outputs": {
+    "vnetId" :{
+      "value" : "[resourceId('Microsoft.Network/virtualNetworks',parameters('MGMTVNetName'))]",
+      "type" : "string"
+    }
+  }
+}

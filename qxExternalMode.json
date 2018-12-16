@@ -146,16 +146,42 @@
 		  "properties": {
 			"securityRules": [
 			  {
-				"name": "first_rule",
+				"name": "https",
 				"properties": {
-				  "description": "This is the second rule",
+				  "description": "https",
 				  "protocol": "Tcp",
 				  "sourcePortRange": "*",
 				  "destinationPortRange": "443",
 				  "sourceAddressPrefix": "*",
 				  "destinationAddressPrefix": "*",
 				  "access": "Allow",
-				  "priority": 1000,
+				  "priority": 2000,
+				  "direction": "Inbound"
+				}
+			  }, {
+				"name": "http",
+				"properties": {
+				  "description": "http",
+				  "protocol": "Tcp",
+				  "sourcePortRange": "*",
+				  "destinationPortRange": "80",
+				  "sourceAddressPrefix": "*",
+				  "destinationAddressPrefix": "*",
+				  "access": "Allow",
+				  "priority": 2100,
+				  "direction": "Inbound"
+				}
+			  }, {
+				"name": "ssh",
+				"properties": {
+				  "description": "ssh",
+				  "protocol": "Tcp",
+				  "sourcePortRange": "*",
+				  "destinationPortRange": "22",
+				  "sourceAddressPrefix": "*",
+				  "destinationAddressPrefix": "*",
+				  "access": "Allow",
+				  "priority": 2200,
 				  "direction": "Inbound"
 				}
 			  }

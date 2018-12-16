@@ -1,0 +1,175 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "VirtualMachineName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name to use for the VM"
+      }
+    },
+    "StorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the storage to use"
+      }
+    },
+    "SSHUser": {
+      "type": "string",
+      "metadata": {
+        "description": "SSH user for the machine"
+      }
+    },
+    "SSHPassword": {
+      "type": "securestring",
+      "metadata": { "description": "SSH password" }
+    },
+    "VMSize": {
+      "type": "string",
+      "metadata": {
+        "description": "Vm Size to use"
+      }
+    },
+    "VNetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the VNET this vm will launch in"
+      }
+    },
+    "NSGName": {
+      "type": "string",
+      "defaultValue": "defaultNsg",
+      "metadata": {
+        "description": "Security group to assign to the VM"
+      }
+    }
+
+    
+
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "nicName": "[concat(parameters('VirtualMachineName'),'-NIC')]",
+    "ipName": "[concat(parameters('VirtualMachineName'),'_IP')]",
+    "defaultNSGName": "[concat(parameters('VirtualMachineName'),'-NSG')]",
+
+    "useDefaultNsg": "[equals(parameters('NSGName'),'defaultNsg')]",
+    "nsgNameMap": {
+      "True": "[variables('defaultNSGName')]",
+      "False": "[parameters('NSGName')]"
+    },
+    "nsgNameActual" : "[variables('nsgNameMap')[string(variables('useDefaultNsg'))]]",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',parameters('VNetName'))]",
+    "SubnetRef": "[concat(variables('vnetID'),'/subnets/','default')]"
+  
+
+  },
+  "resources": [
+    {
+      "name": "[parameters('VirtualMachineName')]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2015-06-15",
+      "location": "[variables('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
+      ],
+      "properties": {
+        "osProfile": {
+          "computerName": "[parameters('VirtualMachineName')]",
+          "adminUsername": "[parameters('SSHUser')]",
+          "adminPassword": "[parameters('SSHPassword')]"
+        },
+        "hardwareProfile": {
+          "vmSize": "[parameters('VMSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2016-Datacenter",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[parameters('VirtualMachineName')]",
+            "vhd": {
+              "uri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts/', parameters('StorageAccountName')), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), parameters('VirtualMachineName'), '2016102316823.vhd')]"
+            },
+            "createOption": "FromImage"
+          },
+          "dataDisks": []
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "[variables('ipName')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2017-03-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "name": "[variables('nicName')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2016-09-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIpAddresses/', variables('ipName'))]"
+      ],
+      "properties": {
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgNameActual'))]"
+        },
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('SubnetRef')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', variables('ipName'))]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "condition": "[variables('useDefaultNsg')]",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[variables('defaultNSGName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "ALLOW_RDP",
+            "properties": {
+              "description": "By default RDP allowed for CS server",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3389",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1020,
+              "direction": "Inbound"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {
+  }
+}
