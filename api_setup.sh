@@ -94,10 +94,13 @@ rm role.json
 #========================================================================================
 
 
-echo -e "\n\n\n-------------------------------------------------------------------------"
-echo "Copy the values below and paste it into the relevant attributes of your CloudShell's Azure cloud provider resource"
-echo -e "${GREEN}\nApplication ID : $AppId \nApplication Key : $AppKey \nTenant ID : $TenantId \nSubscription ID:$SubscriptionId"
+echo -e "\n\n-------------------------------------------------------------------------"
+echo "Copy the values below and paste them into the relevant attributes of your CloudShell's Azure cloud provider resource \n"
+echo -e "${NC}Application ID : ${GREEN}$AppId"
+echo -e "${NC}Application Key : ${GREEN}$AppKey"
+echo -e "${NC}Tenant ID : ${GREEN}$TenantId"
+echo -e "${NC}Subscription ID : ${GREEN}$SubscriptionId"
 echo -e "${NC}-------------------------------------------------------------------------\n\n"
 
                                                                                      
-echo "Done"
+echo "Done\n"
