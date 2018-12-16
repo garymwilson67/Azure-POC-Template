@@ -16,14 +16,15 @@ then
       REGION=$1
 fi
 
-echo -e "\n\n   ___ _    ___  _   _ ___  ___ _  _ ___ __"
+echo -e "\n\n"
+echo -e "   ___ _    ___  _   _ ___  ___ _  _ ___ __  __"
 echo -e "  / __| |  / _ \| | | |   \/ __| || | __| |  | |  "
 echo -e " | (__| |_| (_) | |_| | |) \__ \ __ | _|| |__| |__"
 echo -e "  \___|____\___/ \___/|___/|___/_||_|___|____|____|\n\n\n"
 
 
 echo -e "$GREEN Please wait while we setup the integration with your Azure account. $NC \n\n"
-echo -e "This script grants Cloud Shell permissions to your account."
+echo -e "This script grants CloudShell permissions to your Azure account."
 #========================================================================================
 x=$(az account list)
 accountname=$(az account show |jq -r .user.name)
@@ -89,15 +90,14 @@ EOL
  
 az ad app update --id $AppId --required-resource-accesses role.json --subscription $SubscriptionId
 rm role.json
-echo -e "\n\nApplication Name : $AppName \nApplication ID : $AppId \nApplication Key : $AppKey \nTenant ID : $TenantId \nSubscription ID : $SubscriptionId"
 
 #========================================================================================
 
 
 echo -e "\n\n\n-------------------------------------------------------------------------"
 echo "Copy the values below and paste it into the relevant attributes of your CloudShell's Azure cloud provider resource"
-echo -e "${GREEN}nApplication : $AppId \nApplication Key : $AppKey \nTenant ID : $TenantId \nSubscription ID:$SubscriptionId"
-echo -e "-------------------------------------------------------------------------\n\n"
+echo -e "${GREEN}\nApplication ID : $AppId \nApplication Key : $AppKey \nTenant ID : $TenantId \nSubscription ID:$SubscriptionId"
+echo -e "${NC}-------------------------------------------------------------------------\n\n"
 
                                                                                      
 echo "Done"
