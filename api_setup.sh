@@ -9,12 +9,7 @@ function quit_on_err {
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
-REGION="eastus"
 
-if [ ! -z "$1" ]
-then
-      REGION=$1
-fi
 
 echo -e "\n\n"
 echo -e "   ___ _    ___  _   _ ___  ___ _  _ ___ __  __"
@@ -63,7 +58,6 @@ SubscriptionId=$(jq -n "$x" | jq .["$((subscription_number-1))"].id -r)
 
 echo -e "Running with settings:"
 echo -e "Subscription:" $GREEN$(jq -n "$x" | jq .["$((subscription_number-1))"].name )  $SubscriptionId$NC
-echo -e "Region $GREEN$REGION$NC"
 
 #========================================================================================
 
