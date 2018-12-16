@@ -47,7 +47,7 @@ If it's your first time using this feature, follow Azure's instructions to creat
 4. Copy the following shell commands, and paste into Azure's shell and press Enter.  
 *This script will add an Azure AD application, delegate Azure API permissions to the application and configure the web application as Contributor.*
 ```
-curl https://raw.githubusercontent.com/qualisystems/Azure-POC-Template/api_setup_script/api_setup.sh > cloudshell.sh && 
+curl https://raw.githubusercontent.com/QualiSystems/Azure-POC-Template/master/api_setup.sh > cloudshell.sh && 
 chmod +x cloudshell.sh && 
 ./cloudshell.sh
 ```
