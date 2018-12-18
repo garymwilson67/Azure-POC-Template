@@ -118,9 +118,9 @@ ln -sf /usr/local/lib/freerdp/guacdr.so /usr/lib64/freerdp/
 
 echo "QualiX Script - Configure Guacamole" 
 
-#mkdir -p $GUACAMOLE_HOME_DIR
-#mkdir -p $GUACAMOLE_HOME_DIR/{extensions,lib}
-#touch $GUACAMOLE_HOME_DIR/$GUACAMOLE_PROPERTIES
+mkdir -p $GUACAMOLE_HOME_DIR
+mkdir -p $GUACAMOLE_HOME_DIR/{extensions,lib}
+touch $GUACAMOLE_HOME_DIR/$GUACAMOLE_PROPERTIES
 
 echo "	# /etc/guacamole/guacamole.properties
 	# Hostname and port of guacamole proxy
