@@ -52,8 +52,6 @@
     "publicIpAddressNameQualiVM": "quali_ip",
     "defaultNSGName": "NSG-Quali",
     "portalNsgName": "NSG-Portal",
-    "scriptName": "QualiX-Script",
-
     "storageAccountFullName" : "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
     "mgmtVNetFullName" : "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworks_mgmt_vnet_name'))]"
   },
@@ -86,9 +84,6 @@
         "parameters": {
           "storageAccountName": {
             "value": "[variables('storageAccountName')]"
-          },
-          "scriptName": {
-            "value": "[variables('scriptName')]"
           },
           "adminUsername": { "value": "[parameters('CloudShellVMsAdminUser')]" },
           "adminPassword": { "value": "[parameters('CloudShellVMsAdminPassword')]" },
