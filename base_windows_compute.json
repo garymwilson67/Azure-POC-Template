@@ -65,7 +65,7 @@
     {
       "name": "[parameters('VirtualMachineName')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "2018-10-01",
       "location": "[variables('location')]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
