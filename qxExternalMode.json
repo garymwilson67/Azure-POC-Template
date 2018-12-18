@@ -5,7 +5,7 @@
 		"qx_nic_name":"nic_for_centos_qx",
 		"virtualMachineQxName": "centos-qx-vm",
 		"publicIpAddressNameVMCentosQX": "centos_ip_qx",
-		"nsg_management_name" : "nsg_qx"
+		"nsg_management_name" : "nsg_qx",		
 	},
 	"parameters":{		
 		"vmSize":{"type": "String"},
@@ -28,6 +28,9 @@
 			"type":"string"
 		},
 		"SubnetRef":{
+			"type":"string"
+		},
+		"osDiskType": {
 			"type":"string"
 		}
 	},
@@ -58,8 +61,8 @@
 					},
 					"osDisk": {
 						"name": "[variables('virtualMachineQxName')]",
-						"vhd": {
-							"uri": "[concat(concat(reference(parameters('storageBlob'), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), variables('virtualMachineQxName'), '2016102316823.vhd')]"
+						"managedDisk": {
+							"storageAccountType": "[parameters('osDiskType')]"
 						},
 						"createOption": "fromImage"
 					},
@@ -169,19 +172,6 @@
 				  "destinationAddressPrefix": "*",
 				  "access": "Allow",
 				  "priority": 2100,
-				  "direction": "Inbound"
-				}
-			  }, {
-				"name": "ssh",
-				"properties": {
-				  "description": "ssh",
-				  "protocol": "Tcp",
-				  "sourcePortRange": "*",
-				  "destinationPortRange": "22",
-				  "sourceAddressPrefix": "*",
-				  "destinationAddressPrefix": "*",
-				  "access": "Allow",
-				  "priority": 2200,
 				  "direction": "Inbound"
 				}
 			  }

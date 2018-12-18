@@ -48,7 +48,9 @@
     "qualixscriptUrl": "https://raw.githubusercontent.com/QualiSystems/Azure-POC-Template/master/guacamole-quali-install.sh",
     "commandToExe": "sh guacamole-quali-install.sh",
     "vmSize": "Standard_DS4_v2",
-    "qualiVMSize": "Standard_DS3_v2",
+	"osDiskType": "Premium_LRS",
+    "qxVMSize": "Standard_DS3_v2",
+	"qxOsDiskType": "Premium_LRS",
     "publicIpAddressNameQualiVM": "quali_ip",
     "defaultNSGName": "NSG-Quali",
     "portalNsgName": "NSG-Portal",
@@ -94,7 +96,8 @@
           "SubnetRef": { "value": "[concat(reference('infraDeployment').outputs.vnetId.value,'/subnets/','default')]" },
           "scriptUrl": { "value": "[variables('qualixscriptUrl')]" },
           "commandToExe": { "value": "[variables('commandToExe')]" },
-          "vmSize": { "value": "[variables('qualiVMSize')]" }
+          "vmSize": { "value": "[variables('qxVMSize')]" },
+		  "osDiskType": { "value": "[variables('qxOsDiskType')]" }
         }
       }
     },
@@ -116,13 +119,10 @@
           "ManagementVnetSubnetCIDR": { "value": "[parameters('ManagementVnetSubnetCIDR')]" },
           "MGMTVNetName": { "value": "[variables('virtualNetworks_mgmt_vnet_name')]" },
           "SandboxVNetName": { "value": "[variables('virtualNetworks_sandbox_vnet_name')]" },
-          "StorageAccountName": { "value": "[variables('storageAccountName')]" }
-
-        
+          "StorageAccountName": { "value": "[variables('storageAccountName')]" }        
+        }
       }
-    }
     },
-
     {
       "apiVersion": "2017-05-10",
       "name": "qualiServerDeployment",
@@ -138,13 +138,12 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "VirtualMachineName": { "value": "[variables('virtualMachineCsName')]" },
-          "StorageAccountName": { "value": "[variables('storageAccountName')]" },
+          "VirtualMachineName": { "value": "[variables('virtualMachineCsName')]" },          
           "SSHUser": { "value": "[parameters('CloudShellVMsAdminUser')]" },
           "SSHPassword": { "value": "[parameters('CloudShellVMsAdminPassword')]" },
           "VMSize": { "value": "[variables('vmSize')]" },
+		  "OsDiskType": { "value": "[variables('osDiskType')]" },
           "VNetName": { "value": "[variables('virtualNetworks_mgmt_vnet_name')]" }
-
         }
       }
     },
@@ -164,11 +163,11 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
-          "VirtualMachineName": { "value": "[variables('virtualMachinePoName')]" },
-          "StorageAccountName": { "value": "[variables('storageAccountName')]" },
+          "VirtualMachineName": { "value": "[variables('virtualMachinePoName')]" },          
           "SSHUser": { "value": "[parameters('CloudShellVMsAdminUser')]" },
           "SSHPassword": { "value": "[parameters('CloudShellVMsAdminPassword')]" },
           "VMSize": { "value": "[variables('vmSize')]" },
+		  "OsDiskType": { "value": "[variables('osDiskType')]" },
           "VNetName": { "value": "[variables('virtualNetworks_mgmt_vnet_name')]" },
           "NSGName": { "value": "[variables('portalNsgName')]" }
         }

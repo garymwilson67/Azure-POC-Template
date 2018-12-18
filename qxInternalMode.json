@@ -34,6 +34,9 @@
 		},
 		"commandToExe":{
 			"type": "String"
+		},
+		"osDiskType": {
+			"type":"string"
 		}
 	},
 	"resources":[		
@@ -63,8 +66,8 @@
 					},
 					"osDisk": {
 						"name": "[variables('virtualMachineQxName')]",
-						"vhd": {
-							"uri": "[concat(concat(reference(parameters('storageBlob'), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), variables('virtualMachineQxName'), '2016102316823.vhd')]"
+						"managedDisk": {
+							"storageAccountType": "[parameters('osDiskType')]"
 						},
 						"createOption": "fromImage"
 					},

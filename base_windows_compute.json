@@ -7,13 +7,7 @@
       "metadata": {
         "description": "Name to use for the VM"
       }
-    },
-    "StorageAccountName": {
-      "type": "string",
-      "metadata": {
-        "description": "Name of the storage to use"
-      }
-    },
+    },    
     "SSHUser": {
       "type": "string",
       "metadata": {
@@ -30,6 +24,12 @@
         "description": "Vm Size to use"
       }
     },
+	"OsDiskType": {
+	  "type": "string",
+      "metadata": {
+        "description": "Vm managed data disk type to create"
+      }
+	},	
     "VNetName": {
       "type": "string",
       "metadata": {
@@ -43,9 +43,6 @@
         "description": "Security group to assign to the VM"
       }
     }
-
-    
-
   },
   "variables": {
     "location": "[resourceGroup().location]",
@@ -91,9 +88,9 @@
           },
           "osDisk": {
             "name": "[parameters('VirtualMachineName')]",
-            "vhd": {
-              "uri": "[concat(concat(reference(resourceId('Microsoft.Storage/storageAccounts/', parameters('StorageAccountName')), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), parameters('VirtualMachineName'), '2016102316823.vhd')]"
-            },
+            "managedDisk": {
+				"storageAccountType": "[parameters('OsDiskType')]"
+			},
             "createOption": "FromImage"
           },
           "dataDisks": []
