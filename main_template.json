@@ -45,8 +45,7 @@
     "virtualMachineCsName": "QualiCsVm",
     "virtualMachinePoName": "QualiPortalVm",
     "storageAccountName": "[concat('storage',uniquestring(resourceGroup().id))]",
-    "qx_template_location": "https://s3.amazonaws.com/quali-prod-binaries/8.0.0-163004/Azure-Template/",
-    "qualixscriptUrl": "https://s3.amazonaws.com/quali-prod-binaries/guacamole-quali-install.sh",
+    "qualixscriptUrl": "https://raw.githubusercontent.com/QualiSystems/Azure-POC-Template/master/guacamole-quali-install-custom.sh",
     "commandToExe": "sh guacamole-quali-install.sh",
     "vmSize": "Standard_DS4_v2",
     "qualiVMSize": "Standard_DS3_v2",
@@ -81,7 +80,7 @@
       "properties": {
         "mode": "Incremental",
         "templateLink": {
-          "uri": "[concat(variables('qx_template_location'),'qx',parameters('QualiX_DeploymentMode'),'Mode.json')]",
+          "uri": "[concat(variables('templateRepo'),'qx',parameters('QualiX_DeploymentMode'),'Mode.json')]",
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
