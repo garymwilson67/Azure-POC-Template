@@ -43,7 +43,7 @@
       "peeringName": "vNet_sndbx-to-vNet_mgmt"
     },
     "location": "[resourceGroup().location]",
-    "storageAccountType": "Premium_LRS"
+    "storageAccountType": "Standard_LRS"
   },
   "resources": [
     {
